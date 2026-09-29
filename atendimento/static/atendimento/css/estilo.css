@@ -20,3 +20,7 @@ body{
 main {
     padding: 32px;
 }
+
+nav form {
+    display: inline;
+}

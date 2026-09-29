@@ -12,6 +12,17 @@
 
         <a href="{% url 'lista_servicos' %}">Serviços</a>
         <a href="{% url 'lista_tutores' %}">Tutores</a>
+        <a href="{% url 'novo_tutor' %}">Novo tutor</a>
+        {% if user.is_authenticated %}
+           Olá, {{ user.username }}
+            <form method="post" action="{% url 'sair' %}">
+                {% csrf_token %}
+                <button type="submit">Sair</button>
+            </form>
+        {% else %}
+            <a href="{% url 'login' %}">Entrar</a>
+            <a href="{% url 'cadastro' %}">Cadastrar</a>
+        {% endif %}
     </nav>
     <main>
         {% block content %}

@@ -1,0 +1,12 @@
+{% extends 'atendimento/base.html' %}
+
+{% block content %}
+    <h1>Tutores do PetCare</h1>
+    <ul>
+        {% for tutor in tutores %}
+            <li>{{ tutor.nome }} - {{ tutor.telefone }}
+                <a href="{% url 'editar_tutor' tutor.id %}">editar</a>
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}

@@ -4,7 +4,12 @@
     <h1>Serviços do PetCare</h1>
     <ul>
         {% for servico in servicos %}
-            <li>{{ servico.nome }} - R$ {{ servico.preco }}</li>
+            <li>{{ servico.nome }} - R$ {{ servico.preco }}
+                <a href="{% url 'editar_servico' servico.id %}">editar</a>
+            </li>
         {% endfor %}
     </ul>
+    {% if user.is_authenticated %}
+        <a href="{% url 'novo_servico' %}">Adicionar novo serviço</a>
+    {% endif %}
 {% endblock %}
