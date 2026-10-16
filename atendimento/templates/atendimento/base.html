@@ -19,10 +19,10 @@
                 {% csrf_token %}
                 <button type="submit">Sair</button>
             </form>
+            <a href="{% url 'painel' %}">Painel</a>
         {% else %}
             <a href="{% url 'login' %}">Entrar</a>
             <a href="{% url 'cadastro' %}">Cadastrar</a>
-            <a href="{% url 'painel' %}">Painel</a>
         {% endif %}
     </nav>
     <main>

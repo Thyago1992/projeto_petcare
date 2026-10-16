@@ -1,13 +1,15 @@
 from django.http import HttpResponse
 from servico.models import Servico
-from .models import Tutor
+from .models import Tutor, Atendimento
 from .forms import ServicoForm, TutorForm
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, logout
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.decorators import login_required
 from datetime import date
 from django.db.models import Sum
+from django.utils import timezone
+
 
 
 @login_required
@@ -48,7 +50,7 @@ def novo_tutor(request):
 
 @login_required
 def editar_servico(request, id):
-    servico = Servico.objects.get(id=id)
+    servico = get_object_or_404(Servico, id=id)
     if request.method == 'POST':
         form = ServicoForm(request.POST, instance=servico)
         if form.is_valid():
@@ -61,7 +63,7 @@ def editar_servico(request, id):
 
 @login_required
 def editar_tutor(request, id):
-    tutor = Tutor.objects.get(id=id)
+    tutor = get_object_or_404(Tutor, id=id)
     if request.method == 'POST':
         form = TutorForm(request.POST, instance=tutor)
         if form.is_valid():
@@ -101,8 +103,14 @@ def cadastro(request):
     return render(request, 'atendimento/cadastro.html', {'form': form})
 
 @login_required
-def painel(request):    
-    atendimentos = Atendimento.objects.filter(data=date.today())
-    total = ressult['servico__preco__sum'] if result['servico__preco__sum'] is not None else 0
-    result = atendimentos.aggregate(Sum('servico__preco'))
-    return render(request, 'atendimento/painel.html', {'atendimentos': atendimentos, 'total': total})
+def painel(request):
+    atendimentos = (
+        Atendimento.objects
+        .filter(data__date=timezone.localdate())
+        .select_related('tutor', 'servico')
+    )
+    total = atendimentos.aggregate(total=Sum('servico__preco'))['total'] or 0
+    return render(request, 'atendimento/painel.html', {
+        'atendimentos': atendimentos,
+        'total': total,
+    })
