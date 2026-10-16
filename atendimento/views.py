@@ -6,6 +6,8 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.decorators import login_required
+from datetime import date
+from django.db.models import Sum
 
 
 @login_required
@@ -97,3 +99,10 @@ def cadastro(request):
     else:
         form = UserCreationForm()
     return render(request, 'atendimento/cadastro.html', {'form': form})
+
+@login_required
+def painel(request):    
+    atendimentos = Atendimento.objects.filter(data=date.today())
+    total = ressult['servico__preco__sum'] if result['servico__preco__sum'] is not None else 0
+    result = atendimentos.aggregate(Sum('servico__preco'))
+    return render(request, 'atendimento/painel.html', {'atendimentos': atendimentos, 'total': total})

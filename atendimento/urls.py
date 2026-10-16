@@ -11,4 +11,5 @@ urlpatterns = [
     path('login/', views.entrar, name='login'),
     path('cadastro/', views.cadastro, name='cadastro'),
     path('sair/', views.sair, name='sair'),
+    path('painel/', views.painel, name='painel'),
 ]

@@ -1,0 +1,14 @@
+{% extends 'atendimento/base.html' %}
+{% block content %}
+    <h1>Painel</h1>
+    <p>Bem-vindo ao painel do dia!</p>
+    <ul>
+        {% for atendimento in atendimentos %}
+            <li>{{ atendimento.tutor }} - {{ atendimento.servico }} - {{ atendimento.preco }}</li>
+        {% empty %}
+            <li>Nenhum atendimento registrado.</li>
+        {% endfor %}
+    </ul>
+    <p>Total de atendimentos: {{ atendimentos|length }}</p>
+    <p>Valor total: R$ {{ total|floatformat:2 }}</p>
+{% endblock %}
