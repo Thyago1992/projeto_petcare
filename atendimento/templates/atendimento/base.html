@@ -8,31 +8,42 @@
 </head>
 
 <body>
-    <nav class="menu">
+    <header class="topo">
+        <div class="topo-interno">
+            <a href="{% url 'painel' %}" class="marca">PetCare</a>
 
-        <a href="{% url 'lista_servicos' %}">Serviços</a>
-        <a href="{% url 'lista_tutores' %}">Tutores</a>
-        <a href="{% url 'novo_tutor' %}">Novo tutor</a>
-        {% if user.is_authenticated %}
-           Olá, {{ user.username }}
-            <form method="post" action="{% url 'sair' %}">
-                {% csrf_token %}
-                <button type="submit">Sair</button>
-            </form>
-            <a href="{% url 'painel' %}">Painel</a>
-            <a href="{% url 'lista_pets' %}">Pets</a>
-            <a href="{% url 'novo_atendimento' %}">Novo atendimento</a>
-        {% else %}
-            <a href="{% url 'login' %}">Entrar</a>
-            <a href="{% url 'cadastro' %}">Cadastrar</a>
-        {% endif %}
-    </nav>
-    <main>
+            {% with rota=request.resolver_match.url_name %}
+            <nav class="menu">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'painel' %}" {% if rota == 'painel' %}class="ativo"{% endif %}>Painel</a>
+                    <a href="{% url 'novo_atendimento' %}" {% if rota == 'novo_atendimento' %}class="ativo"{% endif %}>Novo atendimento</a>
+                    <a href="{% url 'lista_pets' %}" {% if rota == 'lista_pets' %}class="ativo"{% endif %}>Pets</a>
+                {% endif %}
+                <a href="{% url 'lista_tutores' %}" {% if rota == 'lista_tutores' %}class="ativo"{% endif %}>Tutores</a>
+                <a href="{% url 'novo_tutor' %}" {% if rota == 'novo_tutor' %}class="ativo"{% endif %}>Novo tutor</a>
+                <a href="{% url 'lista_servicos' %}" {% if rota == 'lista_servicos' %}class="ativo"{% endif %}>Serviços</a>
+            </nav>
+            {% endwith %}
+
+            <div class="usuario">
+                {% if user.is_authenticated %}
+                    <span>Olá, {{ user.username }}</span>
+                    <form method="post" action="{% url 'sair' %}">
+                        {% csrf_token %}
+                        <button type="submit" class="botao botao-fantasma botao-pequeno">Sair</button>
+                    </form>
+                {% else %}
+                    <a href="{% url 'login' %}" class="botao botao-fantasma botao-pequeno">Entrar</a>
+                    <a href="{% url 'cadastro' %}" class="botao botao-pequeno">Cadastrar</a>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+    <main class="conteudo">
         {% block content %}
         {% endblock %}
     </main>
-
-
 </body>
 
 </html>
