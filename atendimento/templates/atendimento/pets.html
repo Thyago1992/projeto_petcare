@@ -1,13 +1,36 @@
 {% extends 'atendimento/base.html' %}
 
 {% block content %}
-    <h1>Pets do PetCare</h1>
-    <ul>
-        {% for pet in pets %}
-            <li>{{ pet.nome }} ({{ pet.especie }}) - Tutor: {{ pet.tutor }}</li>
-        {% empty %}
-            <li>Nenhum pet cadastrado.</li>
-        {% endfor %}
-    </ul>
-    <a href="{% url 'novo_pet' %}">Adicionar novo pet</a>
+    <div class="cabecalho-pagina">
+        <div>
+            <h1>Pets</h1>
+            <p class="subtitulo">Animais cadastrados</p>
+        </div>
+        <a class="botao" href="{% url 'novo_pet' %}">Novo pet</a>
+    </div>
+
+    <div class="cartao tabela">
+        <table>
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Espécie</th>
+                    <th>Tutor</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for pet in pets %}
+                    <tr>
+                        <td>{{ pet.nome }}</td>
+                        <td>{{ pet.especie }}</td>
+                        <td>{{ pet.tutor }}</td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="3" class="vazio">Nenhum pet cadastrado.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 {% endblock %}

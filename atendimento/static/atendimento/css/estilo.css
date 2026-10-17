@@ -1,26 +1,338 @@
-body{
-    font-family: Arial, sans-serif;
+:root {
+    --fundo: #0a0d12;
+    --superficie: #11161d;
+    --superficie-2: #171e27;
+    --borda: #232c38;
+    --texto: #e6edf3;
+    --suave: #8b98a9;
+    --destaque: #6ee7d8;
+    --destaque-texto: #04201c;
+    --erro: #ff6b81;
+    --raio: 14px;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    color-scheme: dark;
+}
+
+body {
     margin: 0;
-    background-color: #f4f4f4;
-    color: #333;
+    min-height: 100vh;
+    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    line-height: 1.5;
+    color: var(--texto);
+    background:
+        radial-gradient(900px 420px at 50% -120px, rgba(110, 231, 216, 0.12), transparent 70%),
+        var(--fundo);
+    background-repeat: no-repeat;
+}
+
+a {
+    color: var(--destaque);
+    text-decoration: none;
+}
+
+/* Topo */
+.topo {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: rgba(10, 13, 18, 0.78);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--borda);
+}
+
+.topo-interno {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    flex-wrap: wrap;
+}
+
+.marca {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Space Grotesk', 'Inter', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--texto);
+}
+
+.marca::before {
+    content: '';
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--destaque);
+    box-shadow: 0 0 14px var(--destaque);
 }
 
 .menu {
-    background-color: #4CAF50;
-    padding: 10px 32px;
-    color: white; 
+    display: flex;
+    flex: 1;
+    flex-wrap: wrap;
+    gap: 4px;
 }
 
 .menu a {
-    color: white;
-    text-decoration: none;
-    margin-right: 24px;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    color: var(--suave);
+    transition: color 0.15s, background 0.15s;
 }
 
-main {
-    padding: 32px;
+.menu a:hover {
+    color: var(--texto);
+    background: var(--superficie-2);
 }
 
-nav form {
-    display: inline;
+.menu a.ativo {
+    color: var(--destaque);
+    background: rgba(110, 231, 216, 0.08);
+}
+
+.usuario {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.9rem;
+    color: var(--suave);
+}
+
+.usuario form {
+    margin: 0;
+}
+
+/* Conteúdo */
+.conteudo {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 40px 24px 64px;
+}
+
+h1 {
+    margin: 0 0 4px;
+    font-family: 'Space Grotesk', 'Inter', sans-serif;
+    font-size: 1.9rem;
+    letter-spacing: -0.02em;
+}
+
+.subtitulo {
+    margin: 0;
+    color: var(--suave);
+}
+
+.cabecalho-pagina {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+/* Cartões e tabelas */
+.cartao {
+    background: var(--superficie);
+    border: 1px solid var(--borda);
+    border-radius: var(--raio);
+    padding: 24px;
+}
+
+.cartao.tabela {
+    padding: 0;
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th {
+    padding: 14px 20px;
+    text-align: left;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--suave);
+    border-bottom: 1px solid var(--borda);
+}
+
+td {
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--borda);
+}
+
+tbody tr:last-child td {
+    border-bottom: none;
+}
+
+tbody tr:hover {
+    background: var(--superficie-2);
+}
+
+.acoes {
+    width: 1%;
+    text-align: right;
+    white-space: nowrap;
+}
+
+td.vazio {
+    padding: 40px 20px;
+    text-align: center;
+    color: var(--suave);
+}
+
+/* Indicadores do painel */
+.indicadores {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.indicador {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.rotulo {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--suave);
+}
+
+.valor {
+    font-family: 'Space Grotesk', 'Inter', sans-serif;
+    font-size: 2.1rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
+.valor.destaque {
+    color: var(--destaque);
+}
+
+/* Botões */
+.botao {
+    display: inline-block;
+    padding: 10px 18px;
+    border: 1px solid transparent;
+    border-radius: 10px;
+    background: var(--destaque);
+    color: var(--destaque-texto);
+    font: inherit;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: box-shadow 0.15s, border-color 0.15s, transform 0.15s;
+}
+
+.botao:hover {
+    box-shadow: 0 0 18px rgba(110, 231, 216, 0.35);
+    transform: translateY(-1px);
+}
+
+.botao-fantasma {
+    background: transparent;
+    color: var(--texto);
+    border-color: var(--borda);
+}
+
+.botao-fantasma:hover {
+    border-color: var(--destaque);
+    box-shadow: none;
+}
+
+.botao-pequeno {
+    padding: 6px 12px;
+    font-size: 0.85rem;
+}
+
+/* Formulários */
+.centro {
+    max-width: 460px;
+    margin: 0 auto;
+}
+
+.centro h1 {
+    margin-bottom: 20px;
+}
+
+.formulario p {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin: 0 0 18px;
+}
+
+.formulario label {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--suave);
+}
+
+.formulario input,
+.formulario select,
+.formulario textarea {
+    width: 100%;
+    padding: 11px 14px;
+    background: var(--fundo);
+    border: 1px solid var(--borda);
+    border-radius: 10px;
+    color: var(--texto);
+    font: inherit;
+}
+
+.formulario input:focus,
+.formulario select:focus,
+.formulario textarea:focus {
+    outline: none;
+    border-color: var(--destaque);
+    box-shadow: 0 0 0 3px rgba(110, 231, 216, 0.15);
+}
+
+.formulario .helptext {
+    font-size: 0.8rem;
+    color: var(--suave);
+}
+
+.formulario .helptext ul {
+    margin: 4px 0 0;
+    padding-left: 18px;
+}
+
+.formulario .errorlist {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: 0.85rem;
+    color: var(--erro);
+}
+
+.formulario .botao {
+    width: 100%;
+    margin-top: 4px;
+}
+
+.rodape-formulario {
+    margin: 18px 0 0;
+    text-align: center;
+    font-size: 0.9rem;
+    color: var(--suave);
 }

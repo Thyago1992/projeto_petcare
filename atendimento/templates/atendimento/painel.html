@@ -1,14 +1,51 @@
 {% extends 'atendimento/base.html' %}
+
 {% block content %}
-    <h1>Painel</h1>
-    <p>Bem-vindo ao painel do dia!</p>
-    <ul>
-        {% for atendimento in atendimentos %}
-            <li>{{ atendimento.pet.tutor }} - {{ atendimento.pet.nome }} - {{ atendimento.servico }} - R$ {{ atendimento.preco_cobrado }}</li>
-        {% empty %}
-            <li>Nenhum atendimento registrado.</li>
-        {% endfor %}
-    </ul>
-    <p>Total de atendimentos: {{ atendimentos|length }}</p>
-    <p>Valor total: R$ {{ total|floatformat:2 }}</p>
+    <div class="cabecalho-pagina">
+        <div>
+            <h1>Painel</h1>
+            <p class="subtitulo">Atendimentos de hoje, {% now "d/m/Y" %}</p>
+        </div>
+        <a class="botao" href="{% url 'novo_atendimento' %}">Novo atendimento</a>
+    </div>
+
+    <section class="indicadores">
+        <div class="cartao indicador">
+            <span class="rotulo">Atendimentos</span>
+            <span class="valor">{{ atendimentos|length }}</span>
+        </div>
+        <div class="cartao indicador">
+            <span class="rotulo">Valor total</span>
+            <span class="valor destaque">R$ {{ total|floatformat:2 }}</span>
+        </div>
+    </section>
+
+    <div class="cartao tabela">
+        <table>
+            <thead>
+                <tr>
+                    <th>Hora</th>
+                    <th>Tutor</th>
+                    <th>Pet</th>
+                    <th>Serviço</th>
+                    <th>Valor</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for atendimento in atendimentos %}
+                    <tr>
+                        <td>{{ atendimento.data|date:"H:i" }}</td>
+                        <td>{{ atendimento.pet.tutor }}</td>
+                        <td>{{ atendimento.pet.nome }}</td>
+                        <td>{{ atendimento.servico }}</td>
+                        <td>R$ {{ atendimento.preco_cobrado|floatformat:2 }}</td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="5" class="vazio">Nenhum atendimento registrado hoje.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 {% endblock %}

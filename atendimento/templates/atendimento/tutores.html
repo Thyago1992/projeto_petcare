@@ -1,12 +1,38 @@
 {% extends 'atendimento/base.html' %}
 
 {% block content %}
-    <h1>Tutores do PetCare</h1>
-    <ul>
-        {% for tutor in tutores %}
-            <li>{{ tutor.nome }} - {{ tutor.telefone }}
-                <a href="{% url 'editar_tutor' tutor.id %}">editar</a>
-            </li>
-        {% endfor %}
-    </ul>
+    <div class="cabecalho-pagina">
+        <div>
+            <h1>Tutores</h1>
+            <p class="subtitulo">Donos dos pets atendidos</p>
+        </div>
+        <a class="botao" href="{% url 'novo_tutor' %}">Novo tutor</a>
+    </div>
+
+    <div class="cartao tabela">
+        <table>
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Telefone</th>
+                    <th class="acoes"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for tutor in tutores %}
+                    <tr>
+                        <td>{{ tutor.nome }}</td>
+                        <td>{{ tutor.telefone }}</td>
+                        <td class="acoes">
+                            <a class="botao botao-fantasma botao-pequeno" href="{% url 'editar_tutor' tutor.pk %}">Editar</a>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="3" class="vazio">Nenhum tutor cadastrado.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 {% endblock %}

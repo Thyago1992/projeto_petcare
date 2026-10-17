@@ -1,10 +1,14 @@
 {% extends 'atendimento/base.html' %}
 
 {% block content %}
-<h1>{{ titulo }}</h1>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Salvar</button>
-</form>
+    <div class="centro">
+        <h1>{{ titulo }}</h1>
+        <div class="cartao formulario">
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="botao">Salvar</button>
+            </form>
+        </div>
+    </div>
 {% endblock %}

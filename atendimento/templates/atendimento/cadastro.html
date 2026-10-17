@@ -1,9 +1,15 @@
 {% extends 'atendimento/base.html' %}
+
 {% block content %}
-    <h2>Cadastrar Usuário</h2>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Cadastrar</button>
-    </form>
+    <div class="centro">
+        <h1>Criar conta</h1>
+        <div class="cartao formulario">
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="botao">Cadastrar</button>
+            </form>
+            <p class="rodape-formulario">Já tem conta? <a href="{% url 'login' %}">Entrar</a></p>
+        </div>
+    </div>
 {% endblock %}
