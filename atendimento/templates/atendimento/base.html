@@ -20,6 +20,8 @@
                 <button type="submit">Sair</button>
             </form>
             <a href="{% url 'painel' %}">Painel</a>
+            <a href="{% url 'lista_pets' %}">Pets</a>
+            <a href="{% url 'novo_atendimento' %}">Novo atendimento</a>
         {% else %}
             <a href="{% url 'login' %}">Entrar</a>
             <a href="{% url 'cadastro' %}">Cadastrar</a>

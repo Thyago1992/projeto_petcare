@@ -1,0 +1,13 @@
+{% extends 'atendimento/base.html' %}
+
+{% block content %}
+    <h1>Pets do PetCare</h1>
+    <ul>
+        {% for pet in pets %}
+            <li>{{ pet.nome }} ({{ pet.especie }}) - Tutor: {{ pet.tutor }}</li>
+        {% empty %}
+            <li>Nenhum pet cadastrado.</li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'novo_pet' %}">Adicionar novo pet</a>
+{% endblock %}

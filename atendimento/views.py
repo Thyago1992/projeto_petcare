@@ -1,115 +1,101 @@
-from django.http import HttpResponse
-from servico.models import Servico
-from .models import Tutor, Atendimento
-from .forms import ServicoForm, TutorForm
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth import login, logout
-from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.contrib.auth import views as auth_views
 from django.contrib.auth.decorators import login_required
-from datetime import date
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Sum
+from django.shortcuts import render
+from django.urls import reverse_lazy
 from django.utils import timezone
+from django.views.generic import CreateView, ListView, UpdateView
+
+from servico.models import Servico
+from .forms import AtendimentoForm, PetForm, ServicoForm, TutorForm
+from .models import Atendimento, Pet, Tutor
 
 
-
-@login_required
-def lista_servicos(request):
-    servicos = Servico.objects.all()
-    return render(request, 'atendimento/servicos.html', {'servicos': servicos})
+class FormularioMixin(LoginRequiredMixin):
+    template_name = 'atendimento/form.html'
 
 
-@login_required
-def lista_tutores(request):
-    tutores = Tutor.objects.all()
-    return render(request, 'atendimento/tutores.html', {'tutores': tutores})
+class ServicoListView(LoginRequiredMixin, ListView):
+    model = Servico
+    template_name = 'atendimento/servicos.html'
+    context_object_name = 'servicos'
 
 
-@login_required
-def novo_servico(request):
-    if request.method == 'POST':
-        form = ServicoForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('lista_servicos')
-    else:
-        form = ServicoForm()
-    return render(request, 'atendimento/servico_form.html', {'form': form})
+class ServicoCreateView(FormularioMixin, CreateView):
+    model = Servico
+    form_class = ServicoForm
+    success_url = reverse_lazy('lista_servicos')
+    extra_context = {'titulo': 'Novo serviço'}
 
 
-@login_required
-def novo_tutor(request):
-    if request.method == 'POST':
-        form = TutorForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('lista_tutores')
-    else:
-        form = TutorForm()
-    return render(request, 'atendimento/tutor_form.html', {'form': form})
+class ServicoUpdateView(FormularioMixin, UpdateView):
+    model = Servico
+    form_class = ServicoForm
+    success_url = reverse_lazy('lista_servicos')
+    extra_context = {'titulo': 'Editar serviço'}
 
 
-@login_required
-def editar_servico(request, id):
-    servico = get_object_or_404(Servico, id=id)
-    if request.method == 'POST':
-        form = ServicoForm(request.POST, instance=servico)
-        if form.is_valid():
-            form.save()
-            return redirect('lista_servicos')
-    else:
-        form = ServicoForm(instance=servico)
-    return render(request, 'atendimento/servico_form.html', {'form': form})
+class TutorListView(LoginRequiredMixin, ListView):
+    model = Tutor
+    template_name = 'atendimento/tutores.html'
+    context_object_name = 'tutores'
 
 
-@login_required
-def editar_tutor(request, id):
-    tutor = get_object_or_404(Tutor, id=id)
-    if request.method == 'POST':
-        form = TutorForm(request.POST, instance=tutor)
-        if form.is_valid():
-            form.save()
-            return redirect('lista_tutores')
-    else:
-        form = TutorForm(instance=tutor)
-    return render(request, 'atendimento/tutor_form.html', {'form': form})
+class TutorCreateView(FormularioMixin, CreateView):
+    model = Tutor
+    form_class = TutorForm
+    success_url = reverse_lazy('lista_tutores')
+    extra_context = {'titulo': 'Novo tutor'}
 
 
-def entrar(request):
-    if request.method == 'POST':
-        form = AuthenticationForm(data=request.POST)
-        if form.is_valid():
-            login(request, form.get_user())
-            return redirect('lista_servicos')
-    else:
-        form = AuthenticationForm()
-    return render(request, 'atendimento/login.html', {'form': form})
+class TutorUpdateView(FormularioMixin, UpdateView):
+    model = Tutor
+    form_class = TutorForm
+    success_url = reverse_lazy('lista_tutores')
+    extra_context = {'titulo': 'Editar tutor'}
 
 
-@login_required
-def sair(request):
-    if request.method == 'POST':
-        logout(request)
-    return redirect('login')
+class PetListView(LoginRequiredMixin, ListView):
+    queryset = Pet.objects.select_related('tutor')
+    template_name = 'atendimento/pets.html'
+    context_object_name = 'pets'
 
 
-def cadastro(request):
-    if request.method == 'POST':
-        form = UserCreationForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('login')
-    else:
-        form = UserCreationForm()
-    return render(request, 'atendimento/cadastro.html', {'form': form})
+class PetCreateView(FormularioMixin, CreateView):
+    model = Pet
+    form_class = PetForm
+    success_url = reverse_lazy('lista_pets')
+    extra_context = {'titulo': 'Novo pet'}
+
+
+class AtendimentoCreateView(FormularioMixin, CreateView):
+    model = Atendimento
+    form_class = AtendimentoForm
+    success_url = reverse_lazy('painel')
+    extra_context = {'titulo': 'Novo atendimento'}
+
+
+class EntrarView(auth_views.LoginView):
+    template_name = 'atendimento/login.html'
+    redirect_authenticated_user = True
+
+
+class CadastroView(CreateView):
+    form_class = UserCreationForm
+    template_name = 'atendimento/cadastro.html'
+    success_url = reverse_lazy('login')
+
 
 @login_required
 def painel(request):
     atendimentos = (
         Atendimento.objects
         .filter(data__date=timezone.localdate())
-        .select_related('tutor', 'servico')
+        .select_related('pet__tutor', 'servico')
     )
-    total = atendimentos.aggregate(total=Sum('servico__preco'))['total'] or 0
+    total = atendimentos.aggregate(total=Sum('preco_cobrado'))['total'] or 0
     return render(request, 'atendimento/painel.html', {
         'atendimentos': atendimentos,
         'total': total,
